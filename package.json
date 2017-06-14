@@ -1,0 +1,28 @@
+{
+  "name": "unrar-promise",
+  "version": "1.0.0",
+  "description": "かんたん.rar展開モジュール",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm update && cd ./test && node index.js"
+  },
+  "author": "honeo",
+  "license": "MIT",
+  "dependencies": {
+    "@honeo/check": "^1.0.2",
+    "fs-extra": "^3.0.1",
+    "node-unrar-js": "^0.8.1"
+  },
+  "devDependencies": {
+    "@honeo/test": "^3.1.1"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "keywords": [
+    "rar",
+    "unrar",
+    "promise"
+  ]
+}

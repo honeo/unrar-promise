@@ -1,0 +1,12 @@
+## etc
+# .gitignoreでは全てのgitignoreディレクトリが対象になるが、.npmignoreではroot/gitignoreのみ
+gitignore/
+
+# Node.js
+node_modules/
+npm-debug.log
+
+# ChromeExtensions keyfile
+*.pem
+# Firefox WebExtensions id
+.web-extension-id
