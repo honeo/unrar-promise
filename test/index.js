@@ -15,8 +15,8 @@
 
 	Bug
 		Atomからterminalやscriptsで実行すると @honeo/test か node-unrar-js が実行時に削除される。
-		package.jsonの依存からも外されてしまう。わけわからん。
-
+		package.jsonの依存からも外されてしまう。
+			=> 当時のnpmの不具合だった。
 */
 const {name, version} = require('../package.json');
 console.log(`${name} v${version}: test`);
@@ -116,6 +116,19 @@ Test([
 		console.log('.list() encrypt');
 		const arr = await unrarp.list('example-encrypted.rar', 'password');
 		return arr.length===5;
+	},
+
+	async function(){
+		console.log('.list() 日本語パスを含む書庫');
+		const arr = await unrarp.list('CP932.rar');
+		return is.true(
+			is.arr(arr),
+			arr.length===2,
+			arr.includes('ディレクトリ'),
+			arr.includes(
+				path.normalize('ディレクトリ/テキストファイル.txt')
+			)
+		);
 	}
 
 ], obj_options).then( (arg)=>{
