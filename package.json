@@ -9,12 +9,12 @@
   "author": "honeo",
   "license": "MIT",
   "dependencies": {
-    "@honeo/check": "^1.0.2",
-    "fs-extra": "^3.0.1",
+    "@honeo/check": "^1.2.0",
+    "fs-extra": "^7.0.1",
     "node-unrar-js": "^0.8.1"
   },
   "devDependencies": {
-    "@honeo/test": "^3.1.1"
+    "@honeo/test": "^3.2.0"
   },
   "directories": {
     "lib": "lib",

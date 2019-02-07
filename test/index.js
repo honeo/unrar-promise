@@ -29,8 +29,12 @@ const fse = require('fs-extra');
 const {is, not, any} = require('@honeo/check');
 
 // Var
-const file_example = path.resolve('./example.rar');
-const file_example_encrypted = path.resolve('./example-encrypted.rar');
+const obj_options = {
+	chtmpdir: true,
+	console: true,
+	exit: true,
+	tmpdirOrigin: 'contents'
+}
 
 Test([
 
@@ -114,16 +118,7 @@ Test([
 		return arr.length===5;
 	}
 
-], {
-	chtmpdir: true,
-	console: true,
-	exit: true,
-	async init(){
-		// 実行場所に example.rar と example-encrypted.rar をコピー
-		await fse.copy(file_example, './example.rar');
-		await fse.copy(file_example_encrypted, './example-encrypted.rar');
-	}
-}).then( (arg)=>{
+], obj_options).then( (arg)=>{
 
 }).catch( (err)=>{
 

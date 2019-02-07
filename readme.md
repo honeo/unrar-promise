@@ -2,8 +2,10 @@
 * [honeo/unrar-promise](https://github.com/honeo/unrar-promise)  
 * [unrar-promise](https://www.npmjs.com/package/unrar-promise)
 
+
 ## なにこれ
 かんたん.rar展開モジュール。
+
 
 ## 使い方
 ```sh
@@ -14,6 +16,7 @@ const unrarp = require('unrar-promise');
 
 await unrarp.extractAll('archive.rar', './output');
 ```
+
 
 ## API
 
