@@ -6,8 +6,7 @@
 
 // Var
 const UnrarPromise = {
-	extract: require('./lib/extract.js'),
-	extractAll: require('./lib/extract-all.js'),
+	unrar: require('./lib/unrar.js'),
 	list: require('./lib/list.js')
 }
 

@@ -1,6 +1,13 @@
 # document
 いわゆる製作メモ。
 
+## TODO
+* 分割ファイル読み込み
+    - 可能なモジュールはいくつかあったが、どれもpasswordに非対応。
+    - 普段はそっちに投げてpasswordが必要な場合だけnode-unrar-jsを使う？
+* Stream
+    - 同上。
+
 
 ## 構成
 * lib/
@@ -22,10 +29,14 @@
 ### dependencies
 * @honeo/check
     - 型チェックなど。
+* console-wrapper
+    - コンソール一括ON/OFF
 * fs-extra
     - fs機能拡張版。
 * node-unrar-js
     - unrar.
+* sanitize-filename
+    - 出力ファイルパス正規化。
 
 ### devDependencies
 * @honeo/test

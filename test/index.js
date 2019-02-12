@@ -18,12 +18,12 @@
 		package.jsonの依存からも外されてしまう。
 			=> 当時のnpmの不具合だった。
 */
-const {name, version} = require('../package.json');
-console.log(`${name} v${version}: test`);
+
 
 // Modules
+const console = require('console-wrapper');
 const Test = require('@honeo/test');
-const unrarp = require('../');
+const {unrar, list} = require('../');
 const path = require('path');
 const fse = require('fs-extra');
 const {is, not, any} = require('@honeo/check');
@@ -33,19 +33,19 @@ const obj_options = {
 	chtmpdir: true,
 	console: true,
 	exit: true,
-	tmpdirOrigin: 'contents'
+	tmpdirOrigin: './contents'
 }
+
+console.enable();
+const {name, version} = require('../package.json');
+console.log(`${name} v${version}: test`);
 
 Test([
 
 	async function(){
-		console.log('init check, find example.rar');
-		return fse.exists('example.rar');
-	},
+		console.log('unrar(rar, cwd)');
+		const dirPath = await unrar('example.rar', './');
 
-	async function(){
-		console.log('.extract() single');
-		const dirPath = await unrarp.extract('example.rar', 'example/hoge.txt', './');
 		return is.true(
 			dirPath===process.cwd(),
 			await fse.exists('example'),
@@ -53,78 +53,105 @@ Test([
 		);
 	},
 
-
 	async function(){
-		console.log('.extract() single encrypt');
-		const dirPath = await unrarp.extract('example-encrypted.rar', 'example-encrypted/hoge.txt', './', 'password');
+		console.log('unrar(rar, NotExistDir)');
+		const dirPath = await unrar('example.rar', 'output');
+		console.log(
+		);
 		return is.true(
-			dirPath===process.cwd(),
-			await fse.exists('example-encrypted'),
-			await fse.exists('example-encrypted/hoge.txt')
+			dirPath===path.join(process.cwd(), 'output'),
+			await fse.exists('./output/example/hoge.txt')
 		);
 	},
 
 	async function(){
-		console.log('.extract() multi');
-		const dirPath = await unrarp.extract('example-encrypted.rar', [
-			'example-encrypted/hoge.txt',
-			'example-encrypted/foo/bar.txt',
-			'example-encrypted/empty'
-		], './', 'password');
-		return is.true(
-			dirPath===process.cwd(),
-			await fse.exists('example-encrypted'),
-			await fse.exists('example-encrypted/hoge.txt'),
-			await fse.exists('example-encrypted/foo/bar.txt'),
-			await fse.exists('example-encrypted/empty')
-		);
+		console.log('unrar(rar, cwd) - case overwrite skip');
+		await unrar('example.rar', './');
+		const stats_before = await fse.stat('example/hoge.txt');
+		await unrar('example.rar', './');
+		const stats_after = await fse.stat('example/hoge.txt');
+		return stats_before.atimeMs===stats_after.atimeMs;
 	},
 
 	async function(){
-		console.log('.extractAll()');
-		const dirPath = await unrarp.extractAll('example.rar', './');
-		return is.true(
-			dirPath===process.cwd(),
-			await fse.exists('example'),
-			await fse.exists('example/hoge.txt'),
-			await fse.exists('example/foo'),
+		console.log('unrar(rar, cwd, {overwrite: true})');
+		await unrar('example.rar', './');
+		const stats_before = await fse.stat('example/hoge.txt');
+		await unrar('example.rar', './', {overwrite: true});
+		const stats_after = await fse.stat('example/hoge.txt');
+		return stats_before.atimeMs!==stats_after.atimeMs;
+	},
+
+
+	async function(){
+		console.log('unrar(rar, cwd, {filter(){}}) - through');
+		let count = 0;
+		await unrar('example.rar', './', {
+			filter({path, type}){
+				count++;
+				if( !is.str(path, type) ){
+					throw new Error('filter');
+				}
+			}
+		});
+		return count===5
+	},
+
+
+	async function(){
+		console.log('unrar(rar, cwd, {filter(){}}) - dir only');
+		await unrar('example.rar', './', {
+			filter({path, type}){
+				return type==='Directory';
+			}
+		});
+		return is.false(
 			await fse.exists('example/foo/bar.txt'),
-			await fse.exists('example/empty')
+			await fse.exists('example/hoge.txt')
 		);
 	},
 
 	async function(){
-		console.log('.extractAll() encrypt');
-		const dirPath = await unrarp.extractAll('example-encrypted.rar', './', 'password');
+		console.log('unrar(rar-encrypted, cwd, {password})');
+		const dirPath = await unrar(
+			'example-encrypted.rar',
+			'./',
+			{password: 'password'}
+		);
 		return is.true(
 			dirPath===process.cwd(),
-			await fse.exists('example-encrypted'),
 			await fse.exists('example-encrypted/hoge.txt'),
-			await fse.exists('example-encrypted/foo'),
 			await fse.exists('example-encrypted/foo/bar.txt'),
 			await fse.exists('example-encrypted/empty')
 		);
 	},
 
+
 	async function(){
-		console.log('.list()');
-		const arr = await unrarp.list('example.rar');
+		console.log('list(rar)');
+		const arr = await list('example.rar');
 		return arr.length===5;
 	},
 
 	async function(){
-		console.log('.list() encrypt');
-		const arr = await unrarp.list('example-encrypted.rar', 'password');
+		console.log('list(rar-encrypted, {password}');
+		const arr = await list(
+			'example-encrypted.rar',
+			{password: 'password'}
+		);
 		return arr.length===5;
 	},
 
+
 	async function(){
-		console.log('.list() 日本語パスを含む書庫');
-		const arr = await unrarp.list('CP932.rar');
+		console.log('list(rar) - 日本語パスを含む書庫');
+		const arr = await list('CP932.rar');
 		return is.true(
 			is.arr(arr),
 			arr.length===2,
-			arr.includes('ディレクトリ'),
+			arr.includes(
+				path.normalize('ディレクトリ/')
+			),
 			arr.includes(
 				path.normalize('ディレクトリ/テキストファイル.txt')
 			)

@@ -12,39 +12,52 @@
 $ npm i unrar-promise
 ```
 ```js
-const unrarp = require('unrar-promise');
+const {unrar, list} = require('unrar-promise');
 
-await unrarp.extractAll('archive.rar', './output');
+await unrar('archive.rar', './output');
 ```
 
 
 ## API
+* 出力先について
+	- ファイルが既にあればスキップする。
+	- ディレクトリがなければ作成する。
+	- [node-sanitize-filename](https://github.com/parshap/node-sanitize-filename)で正規化する。
 
-### .extract(inputFilePath, targetContent or [..targetContent], outputDirPath [, password])
-引数1パスの.rar書庫の中から、引数2のコンテンツを、引数3パスのディレクトリへ展開する。  
-展開先ディレクトリのパス文字列を引数に解決するpromiseを返す。
-```js
-// hoge.rar => output/
-const dirpath = await unrarp.extract('hoge.rar', 'dirinrar/file', 'output');
+### options
+| key       | type     | default | description                                                           |
+|:--------- |:-------- | ------- | --------------------------------------------------------------------- |
+| filter    | function |         | 出力するコンテンツ毎にobjectを引数に実行され、falseが返ればskipする。 |
+| overwrite | boolean  | false   | 上書きを許可するか。                                                  |
+| password  | string   |         | 書庫のパスワード。                                                    |
 
-// multi
-const dirpath = await unrarp.extract('hoge.rar', [
-	'dirinrar/fileA',
-	'dirinrar/fileB'
-], 'output');
-```
 
-### .extractAll(inputFilePath, outputDirPath [, password])
-引数1パスの.rar書庫を、引数2パスのディレクトリへ展開する。  
-展開先ディレクトリのパス文字列を引数に解決するpromiseを返す。
+### unrar(inputFile, outputDir [, options])
+引数1パスの.rar書庫を引数2のディレクトリへ展開する。  
+展開先ディレクトリのパスを引数に解決するpromiseを返す。
 ```js
 // hoge.rar => output/...
-const dirpath = await unrarp.extractAll('hoge.rar', 'output')
+const dirPath = await unrar('hoge.rar', 'output');
+
+// options
+const dirPath = await unrar('hoge.rar', 'output', {
+	filter({path, type}){
+		return type==='File' && /\.txt$/.test(path); //  *.txt file only
+	},
+	overwrite: true,
+	password: '123456'
+});
 ```
 
-### .list(inputFilePath [, password])
+
+### list(inputFile [, options])
 引数1パスの.rar書庫が持つコンテンツ一覧を配列で取得する。  
 取得した配列を引数に解決するpromiseを返す。
 ```js
-const arr = await unrarp.list('hoge.rar'); // [...'content-name']
+const arr = await list('hoge.rar'); // [..."path"]
+
+// options
+const arr = await list('foobar.rar', {
+	password: 'qwerty'
+});
 ```

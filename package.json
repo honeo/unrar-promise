@@ -10,8 +10,10 @@
   "license": "MIT",
   "dependencies": {
     "@honeo/check": "^1.2.0",
+    "console-wrapper": "^1.1.0",
     "fs-extra": "^7.0.1",
-    "node-unrar-js": "^0.8.1"
+    "node-unrar-js": "^0.8.1",
+    "sanitize-filename": "^1.6.1"
   },
   "devDependencies": {
     "@honeo/test": "^3.2.0"
