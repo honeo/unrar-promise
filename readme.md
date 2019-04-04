@@ -29,7 +29,7 @@ await unrar('archive.rar', './output');
 |:--------- |:-------- | ------- | --------------------------------------------------------------------- |
 | filter    | function |         | 出力するコンテンツ毎にobjectを引数に実行され、falseが返ればskipする。 |
 | overwrite | boolean  | false   | 上書きを許可するか。                                                  |
-| password  | string   |         | 書庫のパスワード。                                                    |
+| password  | string   |     ""    | 書庫のパスワード。                                                    |
 
 
 ### unrar(inputFile, outputDir [, options])
@@ -61,3 +61,13 @@ const arr = await list('foobar.rar', {
 	password: 'qwerty'
 });
 ```
+
+
+
+## Breaking Changes
+
+### v1 => v2
+* .extract(), extractAll()
+	- 廃止して.unrar()に統合。
+* .list()
+	- 引数2をstringからobjectに変更。
