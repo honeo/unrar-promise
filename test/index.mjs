@@ -21,14 +21,15 @@
 
 
 // Modules
-const console = require('console-wrapper');
-const Test = require('@honeo/test');
-const {unrar, list} = require('../');
-const path = require('path');
-const fse = require('fs-extra');
-const {is, not, any} = require('@honeo/check');
+import console from 'console-wrapper';
+import Test from '@honeo/test';
+import unrarP from '../index.mjs';
+import path from 'path';
+import fse from 'fs-extra';
+import {is, not, any} from '@honeo/check';
 
 // Var
+const {unrar, list} = unrarP;
 const obj_options = {
 	chtmpdir: true,
 	console: true,
@@ -37,8 +38,7 @@ const obj_options = {
 }
 
 console.enable();
-const {name, version} = require('../package.json');
-console.log(`${name} v${version}: test`);
+
 
 Test([
 

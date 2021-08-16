@@ -2,16 +2,16 @@
   "name": "unrar-promise",
   "version": "2.0.1",
   "description": "かんたん.rar展開モジュール",
-  "main": "index.js",
+  "main": "index.mjs",
   "scripts": {
-    "test": "npm update && cd ./test && node index.js"
+    "test": "cd ./test && node index.mjs"
   },
   "author": "honeo",
   "license": "MIT",
   "dependencies": {
-    "@honeo/check": "^1.6.1",
+    "@honeo/check": "^2.6.0",
     "console-wrapper": "^1.1.0",
-    "fs-extra": "^7.0.1",
+    "fs-extra": "^10.0.0",
     "node-unrar-js": "^0.8.1",
     "sanitize-filename": "^1.6.1"
   },
