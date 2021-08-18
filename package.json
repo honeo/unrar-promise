@@ -1,6 +1,6 @@
 {
   "name": "unrar-promise",
-  "version": "2.0.1",
+  "version": "3.0.0-0",
   "description": "かんたん.rar展開モジュール",
   "main": "index.mjs",
   "scripts": {
