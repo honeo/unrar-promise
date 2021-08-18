@@ -3,26 +3,22 @@
 
 ## TODO
 * 分割ファイル読み込み
-    - 可能なモジュールはいくつかあったが、どれもpasswordに非対応。
-    - 普段はそっちに投げてpasswordが必要な場合だけnode-unrar-jsを使う？
-* Stream
+    - 対応unrarモジュール待ち。
+* 内部でStream
     - 同上。
 
 
-## 構成
-* lib/
-    - 各関数を返すモジュール置き場。
-* test/
-    - index.js
-        - テストで実行するモジュール。
-    - contents/
-        - テストに使う書庫ファイル置き場。
-        - example.rar
-        - example-encrypted.rar
-            - パスワードはそのままpassword.
-        - CP932.rar
-            - WinRARv5.31で作った日本語名のディレクトリ・ファイルを含む書庫。
-            - 現在はUTF-8にパスが変換された上で圧縮されるため、実際にはCP932ではない。
+## testディレクトリ
+- index.mjs
+    - テストで実行するモジュール。
+- contents/
+    - テストに使う書庫ファイル置き場。
+    - example.rar
+    - example-encrypted.rar
+        - パスワードはそのままpassword.
+    - CP932.rar
+        - WinRARv5.31で作った日本語名のディレクトリ・ファイルを含む書庫。
+        - 現在はUTF-8にパスが変換された上で圧縮されるため、実際にはCP932ではない。
 
 ## Mod
 
@@ -37,6 +33,7 @@
     - unrar.
 * sanitize-filename
     - 出力ファイルパス正規化。
+
 
 ### devDependencies
 * @honeo/test

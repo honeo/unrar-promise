@@ -1,22 +1,20 @@
 # unrar-promise
-* [honeo/unrar-promise](https://github.com/honeo/unrar-promise)  
+* [honeo/unrar-promise](https://github.com/honeo/unrar-promise)
 * [unrar-promise](https://www.npmjs.com/package/unrar-promise)
 
 
 ## なにこれ
 かんたん.rar展開モジュール。
 
-
 ## 使い方
 ```sh
 $ npm i unrar-promise
 ```
 ```js
-const {unrar, list} = require('unrar-promise');
+import {unrar, list} from 'unrar-promise';
 
 await unrar('archive.rar', './output');
 ```
-
 
 ## API
 * 出力先について
@@ -29,20 +27,23 @@ await unrar('archive.rar', './output');
 |:--------- |:-------- | ------- | --------------------------------------------------------------------- |
 | filter    | function |         | 出力するコンテンツ毎にobjectを引数に実行され、falseが返ればskipする。 |
 | overwrite | boolean  | false   | 上書きを許可するか。                                                  |
-| password  | string   |     ""    | 書庫のパスワード。                                                    |
+| password  | string   |         | 書庫のパスワード。                                                    |
 
 
-### unrar(inputFile, outputDir [, options])
-引数1パスの.rar書庫を引数2のディレクトリへ展開する。  
+### unrar(input, outputDir [, options])
+引数1パスの.rar書庫を引数2のディレクトリへ展開する。
 展開先ディレクトリのパスを引数に解決するpromiseを返す。
 ```js
-// hoge.rar => output/...
+// .rar path => "output"
 const dirPath = await unrar('hoge.rar', 'output');
+
+// or Buffer<.rar>
+const dirPath = await unrar(arraybuffer, 'output');
 
 // options
 const dirPath = await unrar('hoge.rar', 'output', {
-	filter({path, type}){
-		return type==='File' && /\.txt$/.test(path); //  *.txt file only
+	filter({path, type, size}){
+		return type==='file' && /\.txt$/.test(path); //  *.txt file only
 	},
 	overwrite: true,
 	password: '123456'
@@ -50,11 +51,24 @@ const dirPath = await unrar('hoge.rar', 'output', {
 ```
 
 
-### list(inputFile [, options])
-引数1パスの.rar書庫が持つコンテンツ一覧を配列で取得する。  
-取得した配列を引数に解決するpromiseを返す。
+### list(input [, options])
+引数1パスの.rar書庫が持つコンテンツ一覧をpromise<[...object]>で取得する。
 ```js
-const arr = await list('hoge.rar'); // [..."path"]
+const arr = await list('foobar.rar');
+
+// or Buffer<.rar>
+const arr = await list(arraybuffer);
+
+// example result
+[{
+	path: 'foo',
+	size: 0,
+	type: 'directory'
+}, {
+	path: 'foo/bar.txt',
+	size: 8,
+	type: 'file',
+}]
 
 // options
 const arr = await list('foobar.rar', {
@@ -65,6 +79,18 @@ const arr = await list('foobar.rar', {
 
 
 ## Breaking Changes
+
+### v2 => v3
+* CJS => ESM.
+* unrar()
+ 	- options.filterに渡されるobject.typeが全て小文字になった。
+		- "File" => "file"
+	- options.filterに渡されるobject.pathが末尾に"/"を含まなくなった。
+		- "foo/" => "foo"
+* list()
+	- 返り値を[...string]から[...object]に変更。
+	- 返り値のpathが末尾に"/"を含まなくなった。
+		- "foo/" => "foo"
 
 ### v1 => v2
 * .extract(), extractAll()

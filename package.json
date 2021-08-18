@@ -4,7 +4,7 @@
   "description": "かんたん.rar展開モジュール",
   "main": "index.mjs",
   "scripts": {
-    "test": "cd ./test && node index.mjs"
+    "test": "node ./test/index.mjs"
   },
   "author": "honeo",
   "license": "MIT",
@@ -12,7 +12,7 @@
     "@honeo/check": "^2.6.0",
     "console-wrapper": "^1.1.0",
     "fs-extra": "^10.0.0",
-    "node-unrar-js": "^0.8.1",
+    "node-unrar-js": "^1.0.3",
     "sanitize-filename": "^1.6.1"
   },
   "devDependencies": {

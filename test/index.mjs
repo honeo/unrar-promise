@@ -13,10 +13,6 @@
 			]
 		]
 
-	Bug
-		Atomからterminalやscriptsで実行すると @honeo/test か node-unrar-js が実行時に削除される。
-		package.jsonの依存からも外されてしまう。
-			=> 当時のnpmの不具合だった。
 */
 
 
@@ -34,7 +30,7 @@ const obj_options = {
 	chtmpdir: true,
 	console: true,
 	exit: true,
-	tmpdirOrigin: './contents'
+	tmpdirOrigin: './test/contents'
 }
 
 console.enable();
@@ -46,6 +42,19 @@ Test([
 		console.log('unrar(rar, cwd)');
 		const dirPath = await unrar('example.rar', './');
 
+		return is.true(
+			dirPath===process.cwd(),
+			await fse.exists('example'),
+			await fse.exists('example/hoge.txt')
+		);
+	},
+
+	async function(){
+		console.log('unrar(buf, cwd)');
+		const arraybuffer = Uint8Array.from(
+			await fse.readFile('example.rar')
+		).buffer;
+		const dirPath = await unrar(arraybuffer, './');
 		return is.true(
 			dirPath===process.cwd(),
 			await fse.exists('example'),
@@ -102,7 +111,7 @@ Test([
 		console.log('unrar(rar, cwd, {filter(){}}) - dir only');
 		await unrar('example.rar', './', {
 			filter({path, type}){
-				return type==='Directory';
+				return type==='directory';
 			}
 		});
 		return is.false(
@@ -134,6 +143,15 @@ Test([
 	},
 
 	async function(){
+		console.log('list(buf)');
+		const arraybuffer =  Uint8Array.from(
+			await fse.readFile('example.rar')
+		).buffer;
+		const arr = await list(arraybuffer);
+		return arr.length===5;
+	},
+
+	async function(){
 		console.log('list(rar-encrypted, {password}');
 		const arr = await list(
 			'example-encrypted.rar',
@@ -149,17 +167,9 @@ Test([
 		return is.true(
 			is.arr(arr),
 			arr.length===2,
-			arr.includes(
-				path.normalize('ディレクトリ/')
-			),
-			arr.includes(
-				path.normalize('ディレクトリ/テキストファイル.txt')
-			)
+			arr[0].path==='ディレクトリ',
+			arr[1].path===path.normalize('ディレクトリ/テキストファイル.txt')
 		);
 	}
 
-], obj_options).then( (arg)=>{
-
-}).catch( (err)=>{
-
-});
+], obj_options);
