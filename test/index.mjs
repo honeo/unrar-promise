@@ -19,13 +19,12 @@
 // Modules
 import console from 'console-wrapper';
 import Test from '@honeo/test';
-import unrarP from '../index.mjs';
+import {unrar, list} from '../index.mjs';
 import path from 'path';
 import fse from 'fs-extra';
 import {is, not, any} from '@honeo/check';
 
 // Var
-const {unrar, list} = unrarP;
 const obj_options = {
 	chtmpdir: true,
 	console: true,
@@ -82,6 +81,7 @@ Test([
 		return stats_before.atimeMs===stats_after.atimeMs;
 	},
 
+	// Atom内臓Node.js(v14)だと何故かコケる
 	async function(){
 		console.log('unrar(rar, cwd, {overwrite: true})');
 		await unrar('example.rar', './');
