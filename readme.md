@@ -2,6 +2,13 @@
 * [honeo/unrar-promise](https://github.com/honeo/unrar-promise)
 * [unrar-promise](https://www.npmjs.com/package/unrar-promise)
 
+## __Caution!__
+v3.0.0-*現在、依存モジュールの不具合に対応するためアーカイブを二重にパースしている。
+しばらくはv2がおすすめ。
+```bash
+$ npm i unrar-promise@2
+```
+* [for ver2.0.1 page](https://github.com/honeo/unrar-promise/tree/229e1ec9f6d6f91eab92ebe90ce549aa8ff96d6d)
 
 ## なにこれ
 かんたん.rar展開モジュール。
