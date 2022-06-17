@@ -17,7 +17,7 @@
 
 
 // Modules
-import console from 'console-wrapper';
+// import console from 'console-wrapper';
 import Test from '@honeo/test';
 import {unrar, list} from '../index.mjs';
 import path from 'path';
@@ -32,7 +32,7 @@ const obj_options = {
 	tmpdirOrigin: './test/contents'
 }
 
-console.enable();
+// console.enable();
 
 
 Test([
@@ -98,11 +98,13 @@ Test([
 		await unrar('example.rar', './', {
 			filter({path, type}){
 				count++;
+				console.log('callback', count, path, type);
 				if( !is.str(path, type) ){
 					throw new Error('filter');
 				}
 			}
 		});
+		console.log('count', count);
 		return count===5
 	},
 
