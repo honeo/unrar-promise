@@ -19,7 +19,6 @@ await unrar('archive.rar', './output');
 * 出力先について
 	- ファイルが既にあればスキップする。
 	- ディレクトリがなければ作成する。
-	- [node-sanitize-filename](https://github.com/parshap/node-sanitize-filename)で正規化する。
 
 ### options
 | key       | type     | default | description                                                           |
@@ -27,6 +26,7 @@ await unrar('archive.rar', './output');
 | filter    | function |         | 出力するコンテンツ毎にobjectを引数に実行され、falseが返ればskipする。 |
 | overwrite | boolean  | false   | 上書きを許可するか。                                                  |
 | password  | string   |         | 書庫のパスワード。                                                    |
+| sanitize  | boolean  | true    | ファイル名を[node-sanitize-filename](https://github.com/parshap/node-sanitize-filename)で正規化するか。                                                                     |
 
 
 ### unrar(input, outputDir [, options])

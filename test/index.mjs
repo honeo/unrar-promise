@@ -98,13 +98,11 @@ Test([
 		await unrar('example.rar', './', {
 			filter({path, type}){
 				count++;
-				console.log('callback', count, path, type);
 				if( !is.str(path, type) ){
 					throw new Error('filter');
 				}
 			}
 		});
-		console.log('count', count);
 		return count===5
 	},
 
